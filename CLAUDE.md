@@ -176,7 +176,7 @@ Doc (where each convention came from): `conventions.md`.
   bensonlabs/games (into /projects/games/); the blog (bensonlabs/blog) assembles the site and owns
   posts, About and the site header.
 - Lifecycle stage (experiment, project, maintained, product, archived): project. Created
-  2026-11-08 from the blog's project pages and bensonlabs/workouts, history included (ADR 2).
+  2026-11-07 from the blog's project pages and bensonlabs/workouts, history included (ADR 2).
 
 ### Core rules not used here
 
@@ -210,6 +210,7 @@ Shortcut: if `python3 tools/pack.py` passes, the release will build.
 - Tests, type check, lint (wrap-up runs these): `python3 -m unittest discover -s tools -p 'test_*.py'`,
   `python3 tools/pack.py`.
 - Push reminder, once per clone: `node .claude/hooks/push-reminder.mjs --install`
+- On Windows, use `py` where these say `python3` (`python3` isn't on the PATH there).
 
 ### Environments
 
@@ -221,7 +222,7 @@ Shortcut: if `python3 tools/pack.py` passes, the release will build.
 ### Branches, review and release
 
 - PRs go to (target branch): `main`. Adding, changing or removing a page goes straight to `main`
-  (owner decision, 2026-11-08); tools and workflows go through a PR.
+  (owner decision, 2026-11-07); tools and workflows go through a PR.
 - Branch names (default `feature/<short-name>`): the default.
 - Bring a branch up to date by (merge or rebase): merge.
 - Reviewer: with no second reviewer, the person reviews the whole diff themselves before it merges.

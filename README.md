@@ -7,7 +7,7 @@ the Projects page, each project, Workouts and Bootstraps.
   [bensonlabs/games](https://github.com/bensonlabs/games). The
   [blog](https://github.com/bensonlabs/blog) assembles the site and owns posts, About and the site
   header.
-- **Lifecycle stage:** project. Created 2026-11-08 from the blog's project pages and
+- **Lifecycle stage:** project. Created 2026-11-07 from the blog's project pages and
   bensonlabs/workouts, history included.
 - **Guidance:** `CLAUDE.md` (rules for AI agents, from architectureOS), `tools/sections.py`
   (cards) and `docs/decisions/`.
@@ -42,8 +42,8 @@ By hand, from anywhere (GitHub's website works, phone included):
 ## What the blog requires
 
 The blog's page check refuses a release without any of these pages, and the site keeps the
-previous release. `tools/pack.py` refuses them first and says why, so a removal or a rename fails
-here, not days later in the blog:
+previous release. `tools/pack.py` fails first, naming the missing page and why, so a removal or a
+rename fails here, not days later in the blog:
 
 | Page | Why | From |
 |---|---|---|
@@ -55,9 +55,9 @@ here, not days later in the blog:
 | /projects/tracro/ and /projects/tracro/privacy.html | registered in App Store Connect | `site/tracro/index.html`, `site/tracro/privacy.html` |
 
 The case counts: `2ndPaste`, not `2ndpaste`. Edit these pages in place. To remove, rename or move
-one, change the blog first (its menu, its /bootstraps/ redirect or its page check), and for an
-App Store page, App Store Connect too: their addresses must never change, so keep those four as
-they are, with their cards' `header: no`.
+one of the first four, change the blog first (its menu, its /bootstraps/ redirect and its page
+check). The App Store pages' addresses must never change: keep all four as they are, with their
+cards' `header: no`.
 
 ## How a change reaches the site
 
@@ -77,6 +77,7 @@ By itself, within a few minutes:
 - Pack and check everything: `python3 tools/pack.py`
 - Preview: `python3 -m http.server -d dist`, then open http://localhost:8000/projects/
 - Tests: `python3 -m unittest discover -s tools -p 'test_*.py'`
+- On Windows, use `py` where these say `python3`.
 
 ## What a release contains
 
