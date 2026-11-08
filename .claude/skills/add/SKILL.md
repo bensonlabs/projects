@@ -14,6 +14,9 @@ except where they say to show Justin something.
    standalone document: its own `<html>`, `<head>` and `<body>`, no front matter, no site header
    (`docs/AGENT_PROMPT_ADDENDUM.md`). If it loads other files, bring them into the same folder and
    keep their relative paths. Keep every file under 750 KB: shrink images to the size they're drawn.
+   It needs a description for search results and link previews: a
+   `<meta name="description" content="...">` in its `<head>` (in an `index.md`, `description:` in
+   its front matter). If it has none, give it the card's description (step 3).
 2. **Pick the section** from what it is (ask only if it could be either):
 
    | It is | It goes in | Address |
@@ -45,7 +48,7 @@ except where they say to show Justin something.
    it with "Made by <model> in <tool>." only when Justin says or the file shows. Keep `order: 999`
    unless he gives a place. Show him the card in one line; change it if he asks.
 4. **Check it**: `python3 tools/pack.py` must pass. It catches a page that can't get the site header,
-   a card leading nowhere, and files over 750 KB.
+   a card leading nowhere, a page with a card but no description, and files over 750 KB.
 5. **Commit and push** only that folder: `git add site/<path>`, a commit "Add <title>", and
    `git push` to `main`. If the push reminder says something, answer it in the commit message as it
    asks.

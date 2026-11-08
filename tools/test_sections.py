@@ -6,8 +6,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import sections
+from html_checks import Page
 
-TEMPLATE = '<html><head><title>__SECTION_TITLE__</title></head><body><p>__SECTION_INTRO__</p><script>const GAMES = ' + sections.PLACEHOLDER + ';</script></body></html>'
+TEMPLATE = '<html><head><title>__SECTION_TITLE__</title><meta name="description" content="__SECTION_DESCRIPTION__"></head><body><p>__SECTION_INTRO__</p><script>const GAMES = ' + sections.PLACEHOLDER + ';</script></body></html>'
 
 
 def write(root, name, text):
@@ -74,6 +75,12 @@ class Cards(unittest.TestCase):
         self.assertIn('"title":"One"', page)
         self.assertNotIn(sections.PLACEHOLDER, page)
         self.assertEqual(sections.cards_for(self.site)[0]['title'], 'Plans & <More>')
+
+    def test_a_template_page_is_described_by_its_section_description_or_else_its_intro(self):
+        write(self.site, 'a/section.json', json.dumps({'title': 'A', 'description': 'Plans "to" keep & more', 'intro': 'Intro.'}))
+        write(self.site, 'b/section.json', json.dumps({'title': 'B', 'intro': 'Only an intro.'}))
+        self.assertEqual(Page(sections.render_section(self.site / 'a')).description, 'Plans "to" keep & more')
+        self.assertEqual(Page(sections.render_section(self.site / 'b')).description, 'Only an intro.')
 
     def test_a_section_page_needs_the_placeholder(self):
         write(self.site, 'index.html', '<script>const PROJECTS = [];</script>')

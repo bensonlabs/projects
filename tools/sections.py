@@ -9,7 +9,9 @@ section.json.
 A card has a title, an emoji, a description, an order (lower comes first; 999 by default) and
 a cta (the button's words, "Open →" by default), and optionally a link (somewhere else instead
 of the item's own page), header: no (the item's page stays standalone, without the site header)
-and listed: no (no card). A section.json can also give its page an intro.
+and listed: no (no card). A section.json can also give its page an intro. A section page made
+from the template is described (its description meta tag) by the section's description, or by
+its intro when it has no description.
 
 Where a card comes from, first found wins: the folder's card.json (or section.json); a bl-card
 comment in its index.html (the older bl-game-meta works too); the front matter of its index.md
@@ -147,6 +149,8 @@ def render_section(section: Path) -> str:
         page, source = TEMPLATE.read_text(encoding="utf-8"), TEMPLATE
         page = page.replace("__SECTION_TITLE__", html.escape(info.get("title") or section.name.title()))
         page = page.replace("__SECTION_INTRO__", html.escape(info.get("intro", "")))
+        page = page.replace("__SECTION_DESCRIPTION__",
+                            html.escape(info.get("description") or info.get("intro") or ""))
     if page.count(PLACEHOLDER) != 1:
         raise ValueError(f"{source}: needs the cards placeholder exactly once")
     return page.replace(PLACEHOLDER, data)

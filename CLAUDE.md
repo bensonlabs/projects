@@ -194,6 +194,7 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | Adding or changing anything | Use the `add` skill: it picks the section, writes the card, checks and pushes straight to `main`; it goes live by itself. |
 | A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games). |
 | A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. |
+| A page's description | The Projects page, every section page and the page of every item with a card need one: `<meta name="description" content="...">` in the `<head>` (the card's description will do), `description:` in an `index.md`'s front matter, or a section's `section.json` description. `tools/pack.py` refuses a pack without it. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
 | 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. The blog's page check refuses a release without them. |

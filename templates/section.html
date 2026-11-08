@@ -7,12 +7,13 @@
     Content-Security-Policy:
     - 'unsafe-inline' is required for script-src and style-src because all scripts
       and styles are inline. Refactoring them to external files would allow removing it.
-    - frame-ancestors 'none' prevents clickjacking but is ignored in <meta> tags per spec;
-      it only works via an HTTP response header, which GitHub Pages does not support.
+    - No frame-ancestors: browsers ignore it in a <meta> tag and log an error. It only
+      works as an HTTP response header, which GitHub Pages can't send.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>__SECTION_TITLE__ — Benson Labs</title>
+  <meta name="description" content="__SECTION_DESCRIPTION__">
   <style>
     /* ── OBSIDIAN DARK THEME ── */
     :root {

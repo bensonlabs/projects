@@ -12,6 +12,10 @@ release contains:
 - every section's page with its cards written in (tools/sections.py);
 - .components-wrap.json: the pages the blog wraps in the site header.
 
+The checks refuse a file over 750 KB, a page listed for the site header that can't take it, a card
+that leads nowhere, and a page people find from search results or a link preview (the Projects
+page, a section page, the page of an item with a card) without a description.
+
 The blog (bensonlabs/blog) downloads the release, checks its sha256, unpacks it into /projects/
 and wraps the listed pages.
 """
@@ -44,6 +48,10 @@ NEVER_PUBLISHED_NAMES = {"package.json", "package-lock.json", "tsconfig.json", "
                          "section.json", "metadata.json"}
 NEVER_PUBLISHED_DIRS = {"node_modules", "dist"}
 PUBLISHED_MARKDOWN = {"index.md"}  # a page Jekyll renders: a guide, a write-up
+# 2ndPaste's and Tracro's support and privacy pages: App Store Connect has their URLs, so the
+# checks leave them exactly as they are.
+APP_STORE_PAGES = ("2ndPaste/index.html", "2ndPaste/privacy.html", "tracro/index.html", "tracro/privacy.html")
+FRONT_MATTER_KEY_RE = re.compile(r"^([A-Za-z_][\w-]*):(.*)$")
 
 
 def read_publishignore(folder: Path) -> list[str]:
@@ -99,8 +107,51 @@ def write_sections() -> int:
     return count
 
 
+def front_matter(text: str) -> dict[str, str]:
+    """A page's top-level front matter keys with their one-line values (none without front matter)."""
+    match = sections.FRONT_MATTER_RE.match(text)
+    found = {}
+    for line in match.group(1).splitlines() if match else []:
+        key = FRONT_MATTER_KEY_RE.match(line)
+        if key:
+            found[key.group(1)] = key.group(2).strip().strip("\"'")
+    return found
+
+
+def missing_description(text: str) -> bool:
+    """True when nothing tells search results and link previews what the page is: no description
+    meta tag with text (a head: block in front matter counts: the blog makes it the page's <head>)
+    and, on a page whose <head> the blog writes (front matter without head:), no description in
+    its front matter. A redirect needs none."""
+    page = Page(text)
+    if page.redirect or page.description.strip():
+        return False
+    found = front_matter(text)
+    return "head" in found or not found.get("description")
+
+
+def described_pages() -> list[str]:
+    """The pages that need a description, relative to OUT: the Projects page, every section page
+    and the page of every item with a card. Not cards that lead elsewhere, unlisted items or the
+    App Store pages."""
+    pages = []
+    for section in sections.sections():
+        pages.append((section.relative_to(SITE) / "index.html").as_posix())
+        for item in sections.items(section):
+            data = sections.read_card(item)
+            if sections.is_section(item) or data.get("link") or str(data.get("listed", "yes")).lower() == "no":
+                continue  # a section's page is checked as a section; the others have no page of their own
+            for name in ("index.html", "index.md"):
+                rel = (item.relative_to(SITE) / name).as_posix()
+                if (OUT / rel).is_file():
+                    pages.append(rel)
+                    break
+    return [page for page in pages if page not in APP_STORE_PAGES]
+
+
 def check() -> list[str]:
-    """No file over the size limit, every wrapped page a whole document, every card a page."""
+    """No file over the size limit, every wrapped page a whole document, every card a page, and
+    every page people land on described."""
     errors = []
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):
         size = path.stat().st_size
@@ -122,6 +173,12 @@ def check() -> list[str]:
             folder = OUT / item.relative_to(SITE)
             if not ((folder / "index.html").is_file() or (folder / "index.md").is_file()):
                 errors.append(f"{item.relative_to(SITE).as_posix()}: its card leads to a page that isn't packed")
+    for page in described_pages():
+        target = OUT / page
+        if target.is_file() and missing_description(target.read_text(encoding="utf-8", errors="replace")):
+            errors.append(f'{page}: no description for search results and link previews: add <meta name="description" '
+                          'content="..."> to its <head> (its card\'s description will do; an index.md takes '
+                          "description: in its front matter, a section page its section.json's description)")
     return errors
 
 

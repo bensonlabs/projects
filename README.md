@@ -33,7 +33,11 @@ By hand, from anywhere (GitHub's website works, phone included):
 2. For its card, put a `bl-card` comment at the top of its `<head>` (title, emoji, order,
    description; the fields are in `tools/sections.py`). Without one, the card uses the page's
    `<title>` and description.
-3. Commit it to `main`.
+3. Give the page a description for search results and link previews:
+   `<meta name="description" content="...">` in its `<head>` (the card's description will do; an
+   `index.md` takes `description:` in its front matter). Without one the pack fails, and nothing
+   is released.
+4. Commit it to `main`.
 
 ## App Store pages
 
@@ -71,7 +75,9 @@ By itself, within a few minutes:
 - `.components-wrap.json`: the pages the blog wraps in the site header (every standalone page
   except cards marked `header: no`).
 
-No published file may be over 750 KB. Releases are reproducible: the same files always give the
+No published file may be over 750 KB. The Projects page, every section page and the page of
+every item with a card need a description (a section page's comes from its `section.json`); the
+App Store pages are left as they are. Releases are reproducible: the same files always give the
 same sha256.
 
 ## What the pages expect from the site

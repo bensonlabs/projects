@@ -4,6 +4,10 @@ A page only "has the site header" when it contains the header's elements or file
 whose id or class starts with bl-nav (or the old nav-autohide), or a link to the blog's
 /assets/css/header.css or /assets/js/header.js. A comment or a string that merely mentions
 bl-nav doesn't count.
+
+A page's description is the content of its <meta name="description"> (found inside a Jekyll
+page's head: block too, since that block becomes the page's <head>); a <meta http-equiv="refresh">
+makes the page a redirect.
 """
 from html.parser import HTMLParser
 
@@ -15,7 +19,8 @@ def _is_header_name(name: str) -> bool:
 
 
 class Page(HTMLParser):
-    """Element ids, linked scripts and stylesheets, and any trace of the blog's site header."""
+    """Element ids, linked scripts and stylesheets, any trace of the blog's site header, the
+    page's description and whether it redirects."""
 
     def __init__(self, text: str):
         super().__init__(convert_charrefs=True)
@@ -23,6 +28,8 @@ class Page(HTMLParser):
         self.assets: list[str] = []
         self.site_header: list[str] = []
         self.tags: set[str] = set()
+        self.description = ""
+        self.redirect = False
         self.feed(text)
         self.close()
 
@@ -35,6 +42,10 @@ class Page(HTMLParser):
         for name in [element_id, *attrs.get("class", "").split()]:
             if name and _is_header_name(name):
                 self.site_header.append(f'<{tag}> "{name}"')
+        if tag == "meta" and attrs.get("name", "").lower() == "description":
+            self.description = attrs.get("content", "")
+        if tag == "meta" and attrs.get("http-equiv", "").lower() == "refresh":
+            self.redirect = True
         source = None
         if tag == "script" and attrs.get("src"):
             source = attrs["src"]
