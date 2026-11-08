@@ -9,7 +9,8 @@ release contains:
 - every file under site/, minus what a browser never needs: Markdown (except index.md pages,
   which Jekyll renders), Rust, TOML, TypeScript, shell scripts, lockfiles, package, card and
   metadata files, hidden files, and anything a folder's .publishignore lists (glob patterns);
-- every section's page with its cards written in (tools/sections.py);
+- every section's page with its cards written in, for its script and as plain links for
+  visitors without JavaScript (tools/sections.py);
 - .components-wrap.json: the pages the blog wraps in the site header.
 
 The checks refuse a file over 750 KB, a page listed for the site header that can't take it, a card

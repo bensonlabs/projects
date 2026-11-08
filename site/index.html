@@ -141,6 +141,18 @@ head: |
       .project-card:focus-visible .card-cta { background: var(--accent2); }
       .project-card:active .card-cta { opacity: 0.8; }
 
+      /* ── WITHOUT JAVASCRIPT: the cards as plain links (this list exists only then) ── */
+      .noscript-cards {
+        width: 100%;
+        max-width: 860px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .noscript-cards a { color: var(--accent2); font-weight: 600; }
+      .noscript-cards span { display: block; color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+
       /* ── FOOTER ── */
       .page-footer {
         margin-top: 60px;
@@ -157,6 +169,7 @@ head: |
   </div>
 
   <div class="projects-grid" id="projects-grid"></div>
+  <noscript><!-- links for visitors without JavaScript: filled in by tools/pack.py --></noscript>
 
   <script>
     const PROJECTS = [] /* cards: filled in by tools/pack.py */;

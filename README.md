@@ -71,7 +71,8 @@ By itself, within a few minutes:
 - Everything under `site/`, minus what a browser never needs: Markdown (except `index.md` pages,
   which Jekyll renders), Rust, TOML, TypeScript, shell scripts, lockfiles, package, card and
   metadata files, hidden files, and anything a folder's `.publishignore` lists.
-- Every section page with its cards written in.
+- Every section page with its cards written in: as data for the page's script, and as a plain list
+  of links inside `<noscript>` for visitors (and crawlers) without JavaScript.
 - `.components-wrap.json`: the pages the blog wraps in the site header (every standalone page
   except cards marked `header: no`).
 

@@ -147,6 +147,18 @@
     .game-card:focus-visible .card-play { background: var(--accent2); }
     .game-card:active .card-play { opacity: 0.8; }
 
+    /* ── WITHOUT JAVASCRIPT: the cards as plain links (this list exists only then) ── */
+    .noscript-cards {
+      width: 100%;
+      max-width: 800px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .noscript-cards a { color: var(--accent2); font-weight: 600; }
+    .noscript-cards span { display: block; color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+
     /* ── FOOTER ── */
     .page-footer {
       margin-top: 60px;
@@ -164,6 +176,7 @@
   </div>
 
   <div class="games-grid" id="games-grid"></div>
+  <noscript><!-- links for visitors without JavaScript: filled in by tools/pack.py --></noscript>
 
   <script>
     // ── GAMES REGISTRY ──────────────────────────────────────────────────────
