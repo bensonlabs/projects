@@ -192,7 +192,7 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | When | Do |
 |---|---|
 | Adding or changing anything | Use the `add` skill: it picks the section, writes the card, checks and pushes straight to `main`; it goes live by itself. |
-| A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games, Neon To-Do). |
+| A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games). |
 | A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
