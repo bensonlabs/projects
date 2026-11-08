@@ -41,6 +41,7 @@ from html_checks import Page
 SITE = sections.SITE
 DIST = sections.REPO_ROOT / "dist"
 OUT = DIST / "projects"
+COMPONENT = "projects"  # the pack is <COMPONENT>-<version>.tar.gz
 WRAP_FILE = ".components-wrap.json"
 MAX_FILE_BYTES = 750 * 1024
 VERSION_RE = re.compile(r"v\d+\.\d+\.\d+")
@@ -68,6 +69,7 @@ BLOG_REQUIRES = {
 FRONT_MATTER_KEY_RE = re.compile(r"^([A-Za-z_][\w-]*):(.*)$")
 
 
+# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
 def read_publishignore(folder: Path) -> list[str]:
     path = folder / ".publishignore"
     if not path.is_file():
@@ -76,6 +78,7 @@ def read_publishignore(folder: Path) -> list[str]:
     return [line for line in lines if line and not line.startswith("#")]
 
 
+# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
 def publishable(folder: Path, path: Path, ignore: list[str]) -> bool:
     rel = path.relative_to(folder)
     if any(part.startswith(".") for part in rel.parts):
@@ -211,10 +214,11 @@ def check() -> list[str]:
     return errors
 
 
+# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
 def write_release(version: str) -> Path:
     """Pack OUT reproducibly (sorted entries, fixed times and modes): the same files
     always give the same sha256."""
-    name = f"projects-{version}.tar.gz"
+    name = f"{COMPONENT}-{version}.tar.gz"
     files = sorted((p for p in OUT.rglob("*") if p.is_file()), key=lambda p: p.relative_to(OUT).as_posix())
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w", format=tarfile.PAX_FORMAT) as tar:
