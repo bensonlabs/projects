@@ -57,3 +57,8 @@ except where they say to show Justin something.
 
 Same steps from 3. Edit the page or its card, or move or delete its folder; commit "Change …",
 "Move …" or "Remove …", and push. Moving changes the address: say so.
+
+Never move, rename or remove 2ndPaste's or Tracro's support and privacy pages
+(`site/2ndPaste/index.html` and `privacy.html`, `site/tracro/index.html` and `privacy.html`):
+their URLs are registered in App Store Connect, and the blog refuses a release without them.
+Edit them in place. If Justin asks to move one, first tell him the App Store URLs would break.

@@ -35,6 +35,14 @@ By hand, from anywhere (GitHub's website works, phone included):
    `<title>` and description.
 3. Commit it to `main`.
 
+## App Store pages
+
+2ndPaste's and Tracro's support and privacy pages are registered in App Store Connect, so their
+addresses must never change: `site/2ndPaste/index.html` and `site/2ndPaste/privacy.html`
+(bensonlabs.org/projects/2ndPaste/), and `site/tracro/index.html` and `site/tracro/privacy.html`
+(bensonlabs.org/projects/tracro/). Edit them in place. The blog's page check refuses a release
+without all four, so the site keeps the previous release instead of breaking the App Store links.
+
 ## How a change reaches the site
 
 By itself, within a few minutes:
