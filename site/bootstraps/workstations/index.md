@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "bootstraps"
+title: "Workstation bootstraps"
 description: "Bootstraps for Windows, macOS, Fedora and Ubuntu, WSL included: rebuild a dev machine from documented scripts."
 date: 2026-06-06
 author: Justin Benson

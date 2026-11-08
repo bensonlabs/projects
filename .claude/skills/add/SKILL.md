@@ -51,11 +51,11 @@ except where they say to show Justin something.
    page that can't get the site header, a card leading nowhere, a page with a card but no
    description, a missing page the blog requires, and files over 750 KB.
 5. **Commit and push** only that folder (and any doc the change touches): `git add site/<path>`,
-   a commit "Add <title>", and `git push` to `main`. The push reminder asks about docs for any
-   change under `site/`. When no doc describes what changed (the usual case for a new page), end
-   the commit message with a reason, such as `Docs-Impact: none - a new page; its card describes it`.
-   When the change touches what README.md, CLAUDE.md or this skill describes (a section, a page the
-   blog requires), update that doc in the same commit. Answer any other reminder the same way.
+   a commit "Add <title>", and `git push` to `main`. A page's card describes it, so adding or
+   changing a page needs no doc change. When the change touches what README.md, CLAUDE.md or this
+   skill describes (a section, a page the blog requires), update that doc in the same commit. When
+   the push reminder asks about docs (a change to `tools/`, `templates/` or the workflows) and none
+   needs changing, end the commit message with a reason, such as `Docs-Impact: none - <why>`.
 6. **Confirm it went live.** Watch the newest Release run (`gh run watch`), then the blog's Update
    components run. When both pass, check the page answers 200 and its section page shows the card.
    Report the link. If a check fails, the site keeps the previous release: say what failed.
