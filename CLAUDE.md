@@ -196,6 +196,7 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
+| 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. The blog's page check refuses a release without them. |
 
 Shortcut: if `python3 tools/pack.py` passes, the release will build.
 
