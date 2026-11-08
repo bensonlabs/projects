@@ -169,46 +169,72 @@ Doc (where each convention came from): `conventions.md`.
 
 ## Project rules
 
-<!-- This section is the project's. Fill it in; delete this comment once real rules are here. -->
-
 ### About this project
 
-- What it owns:
-- Lifecycle stage (experiment, project, maintained, product, archived):
+- What it owns: everything under bensonlabs.org/projects/ except the games: the Projects page,
+  each project, Workouts and Bootstraps. `site/` mirrors that address. The games come from
+  bensonlabs/games (into /projects/games/); the blog (bensonlabs/blog) assembles the site and owns
+  posts, About and the site header.
+- Lifecycle stage (experiment, project, maintained, product, archived): project. Created
+  2026-11-08 from the blog's project pages and bensonlabs/workouts, history included (ADR 2).
 
 ### Core rules not used here
 
-- None. List a core rule only when it can't apply to this project, with the reason, for example
-  `9 (access on the server): static files, no server`. Delete the line once the reason stops being true.
+- 1 (check what exists before building new surface): adding pages is what this repo is for.
+- 4 (cite where behavior comes from): the pages implement no outside spec.
+- 5 (don't invent rules): a page's limits and defaults are design choices, not rules that need a source.
+- 9 (access on the server): static files; there is no server.
+
+Rule 11 still applies: some pages keep data in the visitor's browser (see Pages and cards).
+
+### Pages and cards
+
+| When | Do |
+|---|---|
+| Adding or changing anything | Use the `add` skill: it picks the section, writes the card, checks and pushes straight to `main`; it goes live by itself. |
+| A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games, Neon To-Do). |
+| A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. |
+| Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
+| Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
+
+Shortcut: if `python3 tools/pack.py` passes, the release will build.
 
 ### Commands
 
-- Install:
-- Run locally:
-- Tests, type check, lint (wrap-up runs these):
+- Install: nothing.
+- Run locally: `python3 tools/pack.py`, then `python3 -m http.server -d dist` and open
+  http://localhost:8000/projects/ (the site header and Jekyll pages appear only on the real site).
+- Tests, type check, lint (wrap-up runs these): `python3 -m unittest discover -s tools -p 'test_*.py'`,
+  `python3 tools/pack.py`.
 - Push reminder, once per clone: `node .claude/hooks/push-reminder.mjs --install`
 
 ### Environments
 
-- Sandbox for testing:
-- Live, and who changes it:
+- Sandbox for testing: a local pack in `dist/`. There is no shared test site.
+- Live, and who changes it: bensonlabs.org shows the release pinned in the blog's
+  `_data/components.json`. A push to `main` that changes what the site shows goes live within
+  minutes; the blog deploys only after its own checks pass.
 
 ### Branches, review and release
 
-- PRs go to (target branch):
-- Branch names (default `feature/<short-name>`):
-- Bring a branch up to date by (merge or rebase):
+- PRs go to (target branch): `main`. Adding, changing or removing a page goes straight to `main`
+  (owner decision, 2026-11-08); tools and workflows go through a PR.
+- Branch names (default `feature/<short-name>`): the default.
+- Bring a branch up to date by (merge or rebase): merge.
 - Reviewer: with no second reviewer, the person reviews the whole diff themselves before it merges.
-- How changes reach users, and who runs it:
+- How changes reach users, and who runs it: nobody runs anything. Every push to `main` that changes
+  what the site shows makes the Release workflow publish the next version
+  (`projects-vX.Y.Z.tar.gz` and its sha256) and ask the blog to pin it; the blog's Update
+  components workflow runs its checks, pins the release and deploys.
 
 ### Where things live (feature-fit searches these)
 
-- Pages and navigation:
-- Help or user docs:
-- Starter docs:
-- API endpoints:
+- Pages and navigation: `site/` mirrors /projects/: a folder per project in `site/`, per plan in
+  `site/workouts/`, per guide in `site/bootstraps/`; cards as above. Site navigation belongs to the blog.
+- Help or user docs: `README.md`; `tools/sections.py` (cards).
+- Starter docs: none yet.
+- API endpoints: none; the pages are static files.
 
 ### Commit-message answers this project uses
 
-- `Feature-Fit: none - <reason>` and `Docs-Impact: none - <reason>` (core rules 1 to 3). Add any of
-  the project's own here, with the check that reads them.
+- `Feature-Fit: none - <reason>` and `Docs-Impact: none - <reason>` (core rules 1 to 3).

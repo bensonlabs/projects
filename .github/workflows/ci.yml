@@ -1,0 +1,19 @@
+name: Projects
+# Pull requests; pushes to main run the same checks in release.yml before releasing.
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Test the tools
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+      - name: Pack everything (as a release would)
+        run: python3 tools/pack.py
+      - name: Packing changes no committed file
+        run: git diff --exit-code
