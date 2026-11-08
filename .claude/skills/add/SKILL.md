@@ -61,6 +61,11 @@ except where they say to show Justin something.
 Same steps from 3. Edit the page or its card, or move or delete its folder; commit "Change …",
 "Move …" or "Remove …", and push. Moving changes the address: say so.
 
+The pages in README.md "What the blog requires" stay where they are: the Projects, Workouts and
+Bootstraps pages (the site menu), the Workstations guide (the blog's /bootstraps/ redirects to
+it) and the App Store pages. `tools/pack.py` fails without any of them, and the blog would refuse
+the release. Removing or moving one needs the blog changed first: tell Justin and stop.
+
 Never move, rename or remove 2ndPaste's or Tracro's support and privacy pages
 (`site/2ndPaste/index.html` and `privacy.html`, `site/tracro/index.html` and `privacy.html`):
 their URLs are registered in App Store Connect, and the blog refuses a release without them.

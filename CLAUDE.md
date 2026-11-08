@@ -197,7 +197,8 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | A page's description | The Projects page, every section page and the page of every item with a card need one: `<meta name="description" content="...">` in the `<head>` (the card's description will do), `description:` in an `index.md`'s front matter, or a section's `section.json` description. `tools/pack.py` refuses a pack without it. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
-| 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. The blog's page check refuses a release without them. |
+| Removing, moving or renaming a page | Moving or renaming changes its address: say so. The pages in README "What the blog requires" (the site menu's Projects, Workouts and Bootstraps pages, the Workstations guide the blog's /bootstraps/ redirects to, the App Store pages) stay: `tools/pack.py` and the blog's page check refuse a release without them. Removing or moving one needs the blog changed first; tell the person and stop. |
+| 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. `tools/pack.py` and the blog's page check refuse a release without them. |
 
 Shortcut: if `python3 tools/pack.py` passes, the release will build.
 

@@ -39,13 +39,25 @@ By hand, from anywhere (GitHub's website works, phone included):
    is released.
 4. Commit it to `main`.
 
-## App Store pages
+## What the blog requires
 
-2ndPaste's and Tracro's support and privacy pages are registered in App Store Connect, so their
-addresses must never change: `site/2ndPaste/index.html` and `site/2ndPaste/privacy.html`
-(bensonlabs.org/projects/2ndPaste/), and `site/tracro/index.html` and `site/tracro/privacy.html`
-(bensonlabs.org/projects/tracro/). Edit them in place. The blog's page check refuses a release
-without all four, so the site keeps the previous release instead of breaking the App Store links.
+The blog's page check refuses a release without any of these pages, and the site keeps the
+previous release. `tools/pack.py` refuses them first and says why, so a removal or a rename fails
+here, not days later in the blog:
+
+| Page | Why | From |
+|---|---|---|
+| /projects/ | Projects in the site menu | `site/index.html` |
+| /projects/workouts/ | Workouts in the site menu | `site/workouts/section.json` |
+| /projects/bootstraps/ | Bootstraps in the site menu | `site/bootstraps/section.json` |
+| /projects/bootstraps/workstations/ | the blog's /bootstraps/ redirects here, and posts link to it | `site/bootstraps/workstations/index.md` |
+| /projects/2ndPaste/ and /projects/2ndPaste/privacy.html | registered in App Store Connect | `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html` |
+| /projects/tracro/ and /projects/tracro/privacy.html | registered in App Store Connect | `site/tracro/index.html`, `site/tracro/privacy.html` |
+
+The case counts: `2ndPaste`, not `2ndpaste`. Edit these pages in place. To remove, rename or move
+one, change the blog first (its menu, its /bootstraps/ redirect or its page check), and for an
+App Store page, App Store Connect too: their addresses must never change, so keep those four as
+they are, with their cards' `header: no`.
 
 ## How a change reaches the site
 

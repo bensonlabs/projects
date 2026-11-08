@@ -14,8 +14,9 @@ release contains:
 - .components-wrap.json: the pages the blog wraps in the site header.
 
 The checks refuse a file over 750 KB, a page listed for the site header that can't take it, a card
-that leads nowhere, and a page people find from search results or a link preview (the Projects
-page, a section page, the page of an item with a card) without a description.
+that leads nowhere, a page people find from search results or a link preview (the Projects page,
+a section page, the page of an item with a card) without a description, and a pack without a page
+the blog requires (BLOG_REQUIRES), so a removal fails here, not later in the blog.
 
 The blog (bensonlabs/blog) downloads the release, checks its sha256, unpacks it into /projects/
 and wraps the listed pages.
@@ -52,6 +53,18 @@ PUBLISHED_MARKDOWN = {"index.md"}  # a page Jekyll renders: a guide, a write-up
 # 2ndPaste's and Tracro's support and privacy pages: App Store Connect has their URLs, so the
 # checks leave them exactly as they are.
 APP_STORE_PAGES = ("2ndPaste/index.html", "2ndPaste/privacy.html", "tracro/index.html", "tracro/privacy.html")
+# The pages the blog requires, relative to /projects/, and why: its page check
+# (bensonlabs/blog .github/scripts/check_rendered_pages.py) refuses a release without one, and
+# the site keeps the previous release. README "What the blog requires" lists them too. The case
+# counts; an index.md counts for its index.html, since Jekyll renders one into the other.
+BLOG_REQUIRES = {
+    "index.html": "it's Projects in the site menu",
+    "workouts/index.html": "it's Workouts in the site menu",
+    "bootstraps/index.html": "it's Bootstraps in the site menu",
+    "bootstraps/workstations/index.html": "the blog's /bootstraps/ redirects here, and posts link to it",
+    **{page: "its URL is registered in App Store Connect, so it stays at exactly this path (the case counts)"
+       for page in APP_STORE_PAGES},
+}
 FRONT_MATTER_KEY_RE = re.compile(r"^([A-Za-z_][\w-]*):(.*)$")
 
 
@@ -150,9 +163,19 @@ def described_pages() -> list[str]:
     return [page for page in pages if page not in APP_STORE_PAGES]
 
 
+def missing_required(packed: set[str]) -> list[str]:
+    """The pages the blog requires that a pack (its files relative to OUT, as named on disk) lacks."""
+    missing = []
+    for page in BLOG_REQUIRES:
+        markdown = page.removesuffix("index.html") + "index.md" if page.endswith("index.html") else None
+        if page not in packed and markdown not in packed:
+            missing.append(page)
+    return missing
+
+
 def check() -> list[str]:
-    """No file over the size limit, every wrapped page a whole document, every card a page, and
-    every page people land on described."""
+    """No file over the size limit, every wrapped page a whole document, every card a page, every
+    page people land on described, and every page the blog requires there."""
     errors = []
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):
         size = path.stat().st_size
@@ -180,6 +203,11 @@ def check() -> list[str]:
             errors.append(f'{page}: no description for search results and link previews: add <meta name="description" '
                           'content="..."> to its <head> (its card\'s description will do; an index.md takes '
                           "description: in its front matter, a section page its section.json's description)")
+    # Names as they are on disk, so the case counts on Windows and macOS too.
+    packed = {path.relative_to(OUT).as_posix() for path in OUT.rglob("*") if path.is_file()}
+    for page in missing_required(packed):
+        errors.append(f"/projects/{page}: missing, and the blog requires this page: {BLOG_REQUIRES[page]} "
+                      '(README "What the blog requires")')
     return errors
 
 
