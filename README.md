@@ -1,7 +1,9 @@
 # Projects
 
 Everything under [bensonlabs.org/projects/](https://bensonlabs.org/projects/) except the games:
-the Projects page, each project, Workouts and Bootstraps.
+the Projects page, each project and Workouts. Bootstraps moved to bensonlabs/bootstraps
+(bensonlabs.org/bootstraps/, 2026-11-08); here it's only a card that links there, and redirects
+from its old addresses.
 
 - **Owns:** `/projects/` minus `/projects/games/`, which comes from
   [bensonlabs/games](https://github.com/bensonlabs/games). The
@@ -26,7 +28,6 @@ By hand, from anywhere (GitHub's website works, phone included):
    |---|---|---|
    | Projects | `site/<slug>/index.html` | /projects/<slug>/ |
    | Workouts | `site/workouts/<slug>/index.html` | /projects/workouts/<slug>/ |
-   | Bootstraps | `site/bootstraps/<slug>/index.html` | /projects/bootstraps/<slug>/ |
 
    A write-up can be an `index.md` with front matter instead. A new section is a folder with a
    `section.json` (title, emoji, description, intro).
@@ -49,14 +50,11 @@ rename fails here, not days later in the blog:
 |---|---|---|
 | /projects/ | Projects in the site menu | `site/index.html` |
 | /projects/workouts/ | Workouts in the site menu | `site/workouts/section.json` |
-| /projects/bootstraps/ | Bootstraps in the site menu | `site/bootstraps/section.json` |
-| /projects/bootstraps/workstations/ | the blog's /bootstraps/ redirects here, and posts link to it | `site/bootstraps/workstations/index.md` |
 | /projects/2ndPaste/ and /projects/2ndPaste/privacy.html | registered in App Store Connect | `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html` |
 | /projects/tracro/ and /projects/tracro/privacy.html | registered in App Store Connect | `site/tracro/index.html`, `site/tracro/privacy.html` |
 
 The case counts: `2ndPaste`, not `2ndpaste`. Edit these pages in place. To remove, rename or move
-one of the first four, change the blog first (its menu, its /bootstraps/ redirect and its page
-check). The App Store pages' addresses must never change: keep all four as they are, with their
+one of the first two, change the blog first (its menu and its page check). The App Store pages' addresses must never change: keep all four as they are, with their
 cards' `header: no`.
 
 ## How a change reaches the site

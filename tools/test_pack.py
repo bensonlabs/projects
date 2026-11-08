@@ -112,14 +112,13 @@ class BlogRequires(unittest.TestCase):
             root = Path(tmp)
             site, out = root / 'site', root / 'dist' / 'projects'
             site.mkdir(parents=True)
-            make(out, [p for p in pack.BLOG_REQUIRES if not p.startswith(('2ndPaste/', 'bootstraps/'))], page)
+            make(out, [p for p in pack.BLOG_REQUIRES if not p.startswith(('2ndPaste/', 'workouts/'))], page)
             # Jekyll renders an index.md into the index.html the blog asks for.
-            make(out, ['bootstraps/workstations/index.md'], '---\ntitle: Guide\ndescription: x\n---\nText')
+            make(out, ['workouts/index.md'], '---\ntitle: Workouts\ndescription: x\n---\nText')
             make(out, ['2ndpaste/index.html', '2ndpaste/privacy.html'], page)  # the wrong case
             with patch.object(pack, 'SITE', site), patch.object(sections, 'SITE', site), patch.object(pack, 'OUT', out):
                 errors = pack.check()
-        why = {'/projects/bootstraps/index.html': 'site menu',
-               '/projects/2ndPaste/index.html': 'App Store Connect',
+        why = {'/projects/2ndPaste/index.html': 'App Store Connect',
                '/projects/2ndPaste/privacy.html': 'App Store Connect'}
         self.assertEqual(sorted(error.split(': ')[0] for error in errors), sorted(why), errors)
         for error in errors:

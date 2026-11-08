@@ -172,7 +172,8 @@ Doc (where each convention came from): `conventions.md`.
 ### About this project
 
 - What it owns: everything under bensonlabs.org/projects/ except the games: the Projects page,
-  each project, Workouts and Bootstraps. `site/` mirrors that address. The games come from
+  each project and Workouts. `site/` mirrors that address. Bootstraps lives in bensonlabs/bootstraps
+  (bensonlabs.org/bootstraps/, ADR 4); here it's only a link card and redirects from its old addresses. The games come from
   bensonlabs/games (into /projects/games/); the blog (bensonlabs/blog) assembles the site and owns
   posts, About and the site header.
 - Lifecycle stage (experiment, project, maintained, product, archived): project. Created
@@ -197,18 +198,20 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | A page's description | The Projects page, every section page and the page of every item with a card need one: `<meta name="description" content="...">` in the `<head>` (the card's description will do), `description:` in an `index.md`'s front matter, or a section's `section.json` description. `tools/pack.py` refuses a pack without it. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
-| Removing, moving or renaming a page | Moving or renaming changes its address: say so. The pages in README "What the blog requires" (the site menu's Projects, Workouts and Bootstraps pages, the Workstations guide the blog's /bootstraps/ redirects to, the App Store pages) stay: `tools/pack.py` and the blog's page check refuse a release without them. Removing or moving one needs the blog changed first; tell the person and stop. |
+| Removing, moving or renaming a page | Moving or renaming changes its address: say so. The pages in README "What the blog requires" (the site menu's Projects and Workouts pages, the App Store pages) stay: `tools/pack.py` and the blog's page check refuse a release without them. Removing or moving one needs the blog changed first; tell the person and stop. |
 | 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. `tools/pack.py` and the blog's page check refuse a release without them. |
 
 Shortcut: if `python3 tools/pack.py` passes, the release will build.
 
-### Files shared with bensonlabs/games
+### Files shared with other repos
 
-- `tools/next_version.py` and `tools/html_checks.py` are identical in both repos, and so are three
-  functions in `tools/pack.py` (`read_publishignore`, `publishable`, `write_release`).
-  `.github/workflows/release.yml` and `ci.yml` differ only in the lines marked "games only" and
-  their names. Each says so at its top. Change one, and make the same change in the other repo.
-- Why two copies rather than a shared package: the repos are small and separate on purpose (site
+- The same in bensonlabs/games, bensonlabs/projects and bensonlabs/bootstraps: `tools/next_version.py`,
+  three functions in `tools/pack.py` (`read_publishignore`, `publishable`, `write_release`), and
+  `.github/workflows/release.yml` apart from its env block and the lines marked "games only".
+- The same in games and projects: `tools/html_checks.py`, and `.github/workflows/ci.yml` apart from
+  the lines marked "games only" and its name.
+- Each says so at its top. Change one, and make the same change in the others.
+- Why copies rather than a shared package: the repos are small and separate on purpose (site
   review P11, owner default 2026-11-08).
 
 ### Commands
@@ -243,7 +246,7 @@ Shortcut: if `python3 tools/pack.py` passes, the release will build.
 ### Where things live (feature-fit searches these)
 
 - Pages and navigation: `site/` mirrors /projects/: a folder per project in `site/`, per plan in
-  `site/workouts/`, per guide in `site/bootstraps/`; cards as above. Site navigation belongs to the blog.
+  `site/workouts/`; cards as above. `site/bootstraps/` only redirects to /bootstraps/ (bensonlabs/bootstraps). Site navigation belongs to the blog.
 - Help or user docs: `README.md`; `tools/sections.py` (cards).
 - Starter docs: none yet.
 - API endpoints: none; the pages are static files.

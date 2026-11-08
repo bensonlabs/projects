@@ -1,7 +1,7 @@
 # ADR 2: The Projects page, projects, Workouts and Bootstraps in one repo
 
 **Date:** 2026-11-07
-**Status:** accepted
+**Status:** accepted; ADR 4 moved Bootstraps to bensonlabs/bootstraps
 
 ## Context
 
