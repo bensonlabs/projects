@@ -61,15 +61,14 @@ APP_STORE_PAGES = ("2ndPaste/index.html", "2ndPaste/privacy.html", "tracro/index
 BLOG_REQUIRES = {
     "index.html": "it's Projects in the site menu",
     "workouts/index.html": "it's Workouts in the site menu",
-    "bootstraps/index.html": "it's Bootstraps in the site menu",
-    "bootstraps/workstations/index.html": "the blog's /bootstraps/ redirects here, and posts link to it",
     **{page: "its URL is registered in App Store Connect, so it stays at exactly this path (the case counts)"
        for page in APP_STORE_PAGES},
 }
 FRONT_MATTER_KEY_RE = re.compile(r"^([A-Za-z_][\w-]*):(.*)$")
 
 
-# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
+# Shared by bensonlabs/games, bensonlabs/projects and bensonlabs/bootstraps: keep this function
+# identical in all three tools/pack.py.
 def read_publishignore(folder: Path) -> list[str]:
     path = folder / ".publishignore"
     if not path.is_file():
@@ -78,7 +77,8 @@ def read_publishignore(folder: Path) -> list[str]:
     return [line for line in lines if line and not line.startswith("#")]
 
 
-# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
+# Shared by bensonlabs/games, bensonlabs/projects and bensonlabs/bootstraps: keep this function
+# identical in all three tools/pack.py.
 def publishable(folder: Path, path: Path, ignore: list[str]) -> bool:
     rel = path.relative_to(folder)
     if any(part.startswith(".") for part in rel.parts):
@@ -214,7 +214,8 @@ def check() -> list[str]:
     return errors
 
 
-# Shared by bensonlabs/games and bensonlabs/projects: keep this function identical in both tools/pack.py.
+# Shared by bensonlabs/games, bensonlabs/projects and bensonlabs/bootstraps: keep this function
+# identical in all three tools/pack.py.
 def write_release(version: str) -> Path:
     """Pack OUT reproducibly (sorted entries, fixed times and modes): the same files
     always give the same sha256."""

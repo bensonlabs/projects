@@ -1,6 +1,6 @@
 ---
 name: add
-description: Add anything to bensonlabs.org/projects/ - a project, a workout plan, a bootstrap guide, or a new section - from one HTML file (or a Markdown write-up): put it in the right folder, write its card, check it and push; it goes live by itself within minutes. Use whenever Justin hands over a page and wants it on the site, or asks to change, move or remove one, or its card.
+description: Add anything to bensonlabs.org/projects/ - a project, a workout plan, or a new section - from one HTML file (or a Markdown write-up): put it in the right folder, write its card, check it and push; it goes live by itself within minutes. Use whenever Justin hands over a page and wants it on the site, or asks to change, move or remove one, or its card.
 ---
 
 # Add something to the site
@@ -23,7 +23,7 @@ except where they say to show Justin something.
    |---|---|---|
    | a game | not here: bensonlabs/games (its `add-game` skill) | /projects/games/<slug>/ |
    | a workout plan | `site/workouts/<slug>/` | /projects/workouts/<slug>/ |
-   | a bootstrap guide | `site/bootstraps/<slug>/` | /projects/bootstraps/<slug>/ |
+   | a bootstrap command | not here: bensonlabs/bootstraps, whose one page holds every command | /bootstraps/ |
    | a project, a tool, anything else | `site/<slug>/` | /projects/<slug>/ (a card on the Projects page) |
    | a new kind of thing | a new folder with a `section.json` (title, emoji, description, intro) | its own index page, with a card on the Projects page |
 
@@ -69,9 +69,8 @@ except where they say to show Justin something.
 Same steps from 3. Edit the page or its card, or move or delete its folder; commit "Change …",
 "Move …" or "Remove …", and push. Moving changes the address: say so.
 
-The pages in README.md "What the blog requires" stay where they are: the Projects, Workouts and
-Bootstraps pages (the site menu), the Workstations guide (the blog's /bootstraps/ redirects to
-it) and the App Store pages. `tools/pack.py` fails without any of them, and the blog would refuse
+The pages in README.md "What the blog requires" stay where they are: the Projects and Workouts
+pages (the site menu) and the App Store pages. `tools/pack.py` fails without any of them, and the blog would refuse
 the release. Removing or moving one needs the blog changed first: tell Justin and stop.
 
 Never move, rename or remove 2ndPaste's or Tracro's support and privacy pages

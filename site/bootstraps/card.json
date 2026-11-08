@@ -1,0 +1,9 @@
+{
+  "title": "Bootstraps",
+  "emoji": "🧰",
+  "order": 100,
+  "cta": "Open →",
+  "description": "Rebuild a workstation from a clean install: Windows, macOS, Fedora, Ubuntu and WSL, every command on one page.",
+  "link": "/bootstraps/",
+  "header": "no"
+}
