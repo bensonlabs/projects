@@ -5,7 +5,7 @@
 
 ## Context
 
-The site review on 2026-11-08 found that the Release workflow could publish the wrong thing:
+The site review on the night of 2026-11-07 found that the Release workflow could publish the wrong thing:
 
 - Started by hand on another branch, it released that branch to the live site, without a review.
 - Re-running an old run (for example after renewing an expired token) released that run's older
