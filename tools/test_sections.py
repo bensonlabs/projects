@@ -2,12 +2,53 @@
 import json
 import tempfile
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
 from unittest.mock import patch
 
 import sections
+from html_checks import Page
 
-TEMPLATE = '<html><head><title>__SECTION_TITLE__</title></head><body><p>__SECTION_INTRO__</p><script>const GAMES = ' + sections.PLACEHOLDER + ';</script></body></html>'
+TEMPLATE = '<html><head><title>__SECTION_TITLE__</title><meta name="description" content="__SECTION_DESCRIPTION__"></head><body><p>__SECTION_INTRO__</p><noscript>' + sections.NOSCRIPT_PLACEHOLDER + '</noscript><script>const GAMES = ' + sections.PLACEHOLDER + ';</script></body></html>'
+
+
+class Links(HTMLParser):
+    """The links on a page as [href, text, inside <noscript>], the text inside <noscript>, and the
+    script's text."""
+
+    def __init__(self, text):
+        super().__init__(convert_charrefs=True)
+        self.noscript = 0
+        self.link = None
+        self.links = []
+        self.noscript_text = ''
+        self.script = False
+        self.script_text = ''
+        self.feed(text)
+        self.close()
+
+    def handle_starttag(self, tag, attrs):
+        self.script = tag == 'script'
+        if tag == 'noscript':
+            self.noscript += 1
+        elif tag == 'a':
+            self.link = [dict(attrs).get('href'), '', self.noscript > 0]
+            self.links.append(self.link)
+
+    def handle_endtag(self, tag):
+        self.script = False
+        if tag == 'noscript':
+            self.noscript -= 1
+        elif tag == 'a':
+            self.link = None
+
+    def handle_data(self, data):
+        if self.script:
+            self.script_text += data
+        if self.link is not None:
+            self.link[1] += data
+        if self.noscript:
+            self.noscript_text += data
 
 
 def write(root, name, text):
@@ -75,10 +116,45 @@ class Cards(unittest.TestCase):
         self.assertNotIn(sections.PLACEHOLDER, page)
         self.assertEqual(sections.cards_for(self.site)[0]['title'], 'Plans & <More>')
 
+    def test_a_template_page_is_described_by_its_section_description_or_else_its_intro(self):
+        write(self.site, 'a/section.json', json.dumps({'title': 'A', 'description': 'Plans "to" keep & more', 'intro': 'Intro.'}))
+        write(self.site, 'b/section.json', json.dumps({'title': 'B', 'intro': 'Only an intro.'}))
+        self.assertEqual(Page(sections.render_section(self.site / 'a')).description, 'Plans "to" keep & more')
+        self.assertEqual(Page(sections.render_section(self.site / 'b')).description, 'Only an intro.')
+
+    def test_section_pages_list_their_cards_as_links_for_visitors_without_javascript(self):
+        write(self.site, 'plans/section.json', json.dumps({'title': 'Plans'}))
+        write(self.site, 'plans/one/index.html', '<!-- bl-card\ntitle: One & "Two"\ndescription: First <plan>\n-->')
+        write(self.site, 'plans/away/card.json', json.dumps({'title': 'Away', 'link': 'https://example.invalid/x?a=1&b=2'}))
+        write(self.site, 'plans/gone/card.json', json.dumps({'title': 'Gone', 'listed': 'no'}))
+        page = sections.render_section(self.site / 'plans')
+        found = Links(page)
+        # Every link is inside <noscript>: with JavaScript, the page shows only the script's cards.
+        self.assertEqual(found.links, [['https://example.invalid/x?a=1&b=2', 'Away', True],
+                                       ['/projects/plans/one/', 'One & "Two"', True]])
+        self.assertIn('First <plan>', found.noscript_text)
+        self.assertNotIn('Gone', page)
+        self.assertIn('"title":"Away"', page)  # the script's cards are unchanged
+        self.assertNotIn(sections.NOSCRIPT_PLACEHOLDER, page)
+
     def test_a_section_page_needs_the_placeholder(self):
         write(self.site, 'index.html', '<script>const PROJECTS = [];</script>')
         with self.assertRaises(ValueError):
             sections.render_section(self.site)
+        write(self.site, 'index.html', '<script>const PROJECTS = ' + sections.PLACEHOLDER + ';</script>')
+        with self.assertRaises(ValueError):  # the links placeholder is missing
+            sections.render_section(self.site)
+
+    def test_card_text_that_looks_like_a_placeholder_stays_as_it_is(self):
+        write(self.site, 'plans/section.json', json.dumps({'title': 'Plans'}))
+        placeholders = [sections.PLACEHOLDER, sections.NOSCRIPT_PLACEHOLDER]
+        for name, text in zip('ab', placeholders):
+            write(self.site, f'plans/{name}/card.json', json.dumps({'title': name, 'description': text}))
+        page = sections.render_section(self.site / 'plans')
+        script = Links(page).script_text
+        cards = json.loads(script[script.index('=') + 1:].strip().rstrip(';'))
+        self.assertEqual([card['description'] for card in cards], placeholders)
+        self.assertIn(sections.NOSCRIPT_PLACEHOLDER, Links(page).noscript_text)
 
     def test_which_pages_get_the_site_header(self):
         write(self.site, 'games/section.json', json.dumps({'title': 'Games'}))

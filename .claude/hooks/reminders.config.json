@@ -8,7 +8,17 @@
   },
   "docsImpact": {
     "_help": "code: globs for code whose change usually means a doc changes too; docs: globs for those docs. At push, code changed with no doc changed and no Docs-Impact line gets a reminder.",
-    "code": [],
-    "docs": []
+    "code": [
+      "tools/**",
+      "templates/**",
+      ".github/workflows/**"
+    ],
+    "docs": [
+      "README.md",
+      "CLAUDE.md",
+      "docs/**",
+      ".claude/skills/**",
+      "site/**/README.md"
+    ]
   }
 }

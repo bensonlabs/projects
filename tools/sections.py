@@ -9,11 +9,18 @@ section.json.
 A card has a title, an emoji, a description, an order (lower comes first; 999 by default) and
 a cta (the button's words, "Open →" by default), and optionally a link (somewhere else instead
 of the item's own page), header: no (the item's page stays standalone, without the site header)
-and listed: no (no card). A section.json can also give its page an intro.
+and listed: no (no card). A section.json can also give its page an intro. A section page made
+from the template is described (its description meta tag) by the section's description, or by
+its intro when it has no description.
 
 Where a card comes from, first found wins: the folder's card.json (or section.json); a bl-card
 comment in its index.html (the older bl-game-meta works too); the front matter of its index.md
 or index.html; then the page's <title> and description meta tag.
+
+A section page's script builds its cards from the data written in at the cards placeholder.
+The same cards are also written in as a plain list of links at the links placeholder, inside the
+page's <noscript>, for visitors (and crawlers) that don't run JavaScript; everyone else sees only
+the script's cards. A section's own index.html needs both placeholders, once each.
 
 The games come from bensonlabs/games into /projects/games/; site/games/card.json is only their
 card on the Projects page (a link).
@@ -30,6 +37,7 @@ SITE = REPO_ROOT / "site"
 TEMPLATE = REPO_ROOT / "templates" / "section.html"
 SITE_URL = "/projects/"
 PLACEHOLDER = "[] /* cards: filled in by tools/pack.py */"
+NOSCRIPT_PLACEHOLDER = "<!-- links for visitors without JavaScript: filled in by tools/pack.py -->"
 DEFAULT_EMOJI = "🧩"
 DEFAULT_ORDER = 999
 DEFAULT_CTA = "Open →"
@@ -136,9 +144,19 @@ def cards_for(section: Path) -> list[dict]:
     return [{key: value for key, value in c.items() if not key.startswith("_")} for c in found]
 
 
+def noscript_links(cards: list[dict]) -> str:
+    """The cards as a plain list of links (title, then description)."""
+    rows = []
+    for c in cards:
+        description = f" <span>{html.escape(c['description'])}</span>" if c["description"] else ""
+        rows.append(f'<li><a href="{html.escape(c["path"])}">{html.escape(c["title"])}</a>{description}</li>')
+    return '<ul class="noscript-cards">\n' + "".join(f"{row}\n" for row in rows) + "</ul>"
+
+
 def render_section(section: Path) -> str:
     """The section's page with its cards written in: its own index.html, or the template."""
-    data = json.dumps(cards_for(section), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    cards = cards_for(section)
+    data = json.dumps(cards, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     own = section / "index.html"
     if own.is_file():
         page, source = own.read_text(encoding="utf-8"), own
@@ -147,9 +165,15 @@ def render_section(section: Path) -> str:
         page, source = TEMPLATE.read_text(encoding="utf-8"), TEMPLATE
         page = page.replace("__SECTION_TITLE__", html.escape(info.get("title") or section.name.title()))
         page = page.replace("__SECTION_INTRO__", html.escape(info.get("intro", "")))
+        page = page.replace("__SECTION_DESCRIPTION__",
+                            html.escape(info.get("description") or info.get("intro") or ""))
     if page.count(PLACEHOLDER) != 1:
         raise ValueError(f"{source}: needs the cards placeholder exactly once")
-    return page.replace(PLACEHOLDER, data)
+    if page.count(NOSCRIPT_PLACEHOLDER) != 1:
+        raise ValueError(f"{source}: needs the links placeholder exactly once, inside <noscript>: {NOSCRIPT_PLACEHOLDER}")
+    # One pass, so card text that happens to contain a placeholder is never replaced itself.
+    filled = {PLACEHOLDER: data, NOSCRIPT_PLACEHOLDER: noscript_links(cards)}
+    return re.sub("|".join(map(re.escape, filled)), lambda match: filled[match.group(0)], page)
 
 
 def _standalone(page: Path) -> bool:

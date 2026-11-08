@@ -1,14 +1,14 @@
 # ADR 2: The Projects page, projects, Workouts and Bootstraps in one repo
 
-**Date:** 2026-11-08
+**Date:** 2026-11-07
 **Status:** accepted
 
 ## Context
 
 Justin wants to add a project, a workout plan or anything else that is a single HTML page, with
-its card on the right index, in one step, for every section in the site menu (2026-11-08). The
+its card on the right index, in one step, for every section in the site menu (2026-11-07). The
 project pages lived in the blog and the workout plans in bensonlabs/workouts. Games keep their
-own repo, bensonlabs/games (his correction, 2026-11-08).
+own repo, bensonlabs/games (his correction, 2026-11-07).
 
 ## Decision
 

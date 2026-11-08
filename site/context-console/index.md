@@ -8,7 +8,7 @@ description: Owner-only work context tracker for resuming interrupted work.
 
 Context Console is a focused work-context tracker for answering three questions after an interruption: what was I doing, why did it matter, and what should happen next?
 
-[Open the live app →](https://context-console.onrender.com) · [View the source](https://github.com/bensonlabs/context-console)
+[Open the live app →](https://context-console.onrender.com)
 
 ## Current status
 
@@ -19,5 +19,3 @@ The deployed slice supports authenticated, database-backed work items with activ
 ## Deployment
 
 - **Live app:** [context-console.onrender.com](https://context-console.onrender.com)
-- **Source:** [bensonlabs/context-console](https://github.com/bensonlabs/context-console)
-- **Supabase project:** `buvlsrccvrnnbxtwiozn`

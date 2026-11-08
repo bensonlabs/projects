@@ -43,18 +43,15 @@ On narrow screens, use **Controls** or **Telemetry** below the site header to op
 
 ## Installation & Running Locally
 
-The simulator uses vanilla JavaScript modules, but `index.html` is a Jekyll content fragment with `layout: project`. Preview it through the blog's Jekyll build so its document shell, styles, and shared header are rendered.
+The simulator uses vanilla JavaScript modules. `index.html` is a Jekyll page (`layout: project`, with its head in the front matter). On bensonlabs.org the blog renders it with the site header, from the release this repo (bensonlabs/projects) publishes; the blog's own build only uses pinned releases, so it can't show a change you haven't released.
 
-1.  Clone the full blog repository. Install Ruby (the repository specifies its version in `.ruby-version`), Bundler, and Python 3.
-2.  From the repository root, install dependencies and start Jekyll:
-    ```bash
-    bundle install
-    python3 .github/scripts/components.py assemble
-    bundle exec jekyll serve
-    ```
-3.  Open `http://localhost:4000/projects/gravitas/` in your web browser.
+Preview it with this repo's pack, as its README describes under "Working on it":
 
-A plain static server pointed at the source folder does not process the Jekyll front matter or layout.
+1.  From the repository root, with Python 3: `python3 tools/pack.py` (on Windows, `py tools/pack.py`).
+2.  Serve the pack: `python3 -m http.server -d dist`.
+3.  Open `http://localhost:8000/projects/gravitas/` in your web browser.
+
+A static server doesn't process Jekyll: the front matter ends up in the page as plain text, and there's no site header. The page as visitors see it appears only on bensonlabs.org, once the release is pinned.
 
 ---
 

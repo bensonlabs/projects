@@ -6,14 +6,17 @@ description: Add anything to bensonlabs.org/projects/ - a project, a workout pla
 # Add something to the site
 
 Adding is one push to `main`: the Release workflow publishes the next release and the blog pins
-it and deploys after its checks (owner decision, 2026-11-08). Do the steps below without asking,
+it and deploys after its checks (owner decision, 2026-11-07). Do the steps below without asking,
 except where they say to show Justin something.
 
 1. **Get the page.** An HTML file, pasted HTML, or a link to download; a write-up can be Markdown
    (`index.md` with front matter, which Jekyll renders). An HTML page must be one complete,
    standalone document: its own `<html>`, `<head>` and `<body>`, no front matter, no site header
-   (`docs/AGENT_PROMPT_ADDENDUM.md`). If it loads other files, bring them into the same folder and
-   keep their relative paths. Keep every file under 750 KB: shrink images to the size they're drawn.
+   (the blog adds it). If it loads other files, bring them into the same folder and keep their
+   relative paths. Keep every file under 750 KB: shrink images to the size they're drawn.
+   It needs a description for search results and link previews: a
+   `<meta name="description" content="...">` in its `<head>` (in an `index.md`, `description:` in
+   its front matter). If it has none, give it the card's description (step 3).
 2. **Pick the section** from what it is (ask only if it could be either):
 
    | It is | It goes in | Address |
@@ -44,19 +47,32 @@ except where they say to show Justin something.
    `listed: no` (no card). Pick an emoji that fits; write the description from the page itself; end
    it with "Made by <model> in <tool>." only when Justin says or the file shows. Keep `order: 999`
    unless he gives a place. Show him the card in one line; change it if he asks.
-4. **Check it**: `python3 tools/pack.py` must pass. It catches a page that can't get the site header,
-   a card leading nowhere, and files over 750 KB.
-5. **Commit and push** only that folder: `git add site/<path>`, a commit "Add <title>", and
-   `git push` to `main`. If the push reminder says something, answer it in the commit message as it
-   asks.
+4. **Check it**: `python3 tools/pack.py` (on Windows, `py tools/pack.py`) must pass. It catches a
+   page that can't get the site header, a card leading nowhere, a page with a card but no
+   description, a missing page the blog requires, and files over 750 KB.
+5. **Commit and push** only that folder (and any doc the change touches): `git add site/<path>`,
+   a commit "Add <title>", and `git push` to `main`. A page's card describes it, so adding or
+   changing a page needs no doc change. When the change touches what README.md, CLAUDE.md or this
+   skill describes (a section, a page the blog requires), update that doc in the same commit. When
+   the push reminder asks about docs (a change to `tools/`, `templates/` or the workflows) and none
+   needs changing, end the commit message with a reason, such as `Docs-Impact: none - <why>`.
 6. **Confirm it went live.** Watch the newest Release run (`gh run watch`), then the blog's Update
    components run. When both pass, check the page answers 200 and its section page shows the card.
    Report the link. If a check fails, the site keeps the previous release: say what failed.
+   If the Release run goes red at "Tell the blog to publish it", the release is still published,
+   and the blog's daily run (13:17 UTC) pins it. The red step means BLOG_DISPATCH_TOKEN was refused
+   (expired or revoked): tell Justin, and point him to the section "The dispatch token" in
+   bensonlabs/blog's CONTRIBUTING.md.
 
 ## Changing, moving or removing
 
 Same steps from 3. Edit the page or its card, or move or delete its folder; commit "Change …",
 "Move …" or "Remove …", and push. Moving changes the address: say so.
+
+The pages in README.md "What the blog requires" stay where they are: the Projects, Workouts and
+Bootstraps pages (the site menu), the Workstations guide (the blog's /bootstraps/ redirects to
+it) and the App Store pages. `tools/pack.py` fails without any of them, and the blog would refuse
+the release. Removing or moving one needs the blog changed first: tell Justin and stop.
 
 Never move, rename or remove 2ndPaste's or Tracro's support and privacy pages
 (`site/2ndPaste/index.html` and `privacy.html`, `site/tracro/index.html` and `privacy.html`):

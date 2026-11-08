@@ -4,9 +4,10 @@ title: "Projects — Benson Labs"
 head: |
   <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projects — Benson Labs</title>
+    <meta name="description" content="Interactive tools and experiments built for the browser.">
     <style>
       /* ── OBSIDIAN DARK THEME ── */
       :root {
@@ -140,6 +141,18 @@ head: |
       .project-card:focus-visible .card-cta { background: var(--accent2); }
       .project-card:active .card-cta { opacity: 0.8; }
 
+      /* ── WITHOUT JAVASCRIPT: the cards as plain links (this list exists only then) ── */
+      .noscript-cards {
+        width: 100%;
+        max-width: 860px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .noscript-cards a { color: var(--accent2); font-weight: 600; }
+      .noscript-cards span { display: block; color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+
       /* ── FOOTER ── */
       .page-footer {
         margin-top: 60px;
@@ -156,6 +169,7 @@ head: |
   </div>
 
   <div class="projects-grid" id="projects-grid"></div>
+  <noscript><!-- links for visitors without JavaScript: filled in by tools/pack.py --></noscript>
 
   <script>
     const PROJECTS = [] /* cards: filled in by tools/pack.py */;

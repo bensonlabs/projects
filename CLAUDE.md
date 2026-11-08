@@ -176,7 +176,7 @@ Doc (where each convention came from): `conventions.md`.
   bensonlabs/games (into /projects/games/); the blog (bensonlabs/blog) assembles the site and owns
   posts, About and the site header.
 - Lifecycle stage (experiment, project, maintained, product, archived): project. Created
-  2026-11-08 from the blog's project pages and bensonlabs/workouts, history included (ADR 2).
+  2026-11-07 from the blog's project pages and bensonlabs/workouts, history included (ADR 2).
 
 ### Core rules not used here
 
@@ -192,11 +192,13 @@ Rule 11 still applies: some pages keep data in the visitor's browser (see Pages 
 | When | Do |
 |---|---|
 | Adding or changing anything | Use the `add` skill: it picks the section, writes the card, checks and pushes straight to `main`; it goes live by itself. |
-| A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games, Neon To-Do). |
-| A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. |
+| A card | `card.json`, `section.json` or a `bl-card` comment; the fields are in `tools/sections.py`. A card with `link:` leads elsewhere (Games). |
+| A new section | A folder with a `section.json` (title, emoji, description, intro); its page comes from `templates/section.html`. A section with its own `index.html` needs both placeholders that `tools/sections.py` fills in: the cards for its script and the links inside `<noscript>`. |
+| A page's description | The Projects page, every section page and the page of every item with a card need one: `<meta name="description" content="...">` in the `<head>` (the card's description will do), `description:` in an `index.md`'s front matter, or a section's `section.json` description. `tools/pack.py` refuses a pack without it. |
 | Changing how a page stores data in the browser (core rule 11) | Keep existing data loading: read the old format or migrate it. Never silently reset what a visitor saved. |
 | Images, sounds, fonts | No published file may be over 750 KB: size images to how they're drawn. |
-| 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. The blog's page check refuses a release without them. |
+| Removing, moving or renaming a page | Moving or renaming changes its address: say so. The pages in README "What the blog requires" (the site menu's Projects, Workouts and Bootstraps pages, the Workstations guide the blog's /bootstraps/ redirects to, the App Store pages) stay: `tools/pack.py` and the blog's page check refuse a release without them. Removing or moving one needs the blog changed first; tell the person and stop. |
+| 2ndPaste's or Tracro's support or privacy page | App Store Connect has their URLs. Edit them in place, but never move, rename or remove `site/2ndPaste/index.html`, `site/2ndPaste/privacy.html`, `site/tracro/index.html` or `site/tracro/privacy.html` (the case counts), and keep their cards' `header: no`. `tools/pack.py` and the blog's page check refuse a release without them. |
 
 Shortcut: if `python3 tools/pack.py` passes, the release will build.
 
@@ -208,6 +210,7 @@ Shortcut: if `python3 tools/pack.py` passes, the release will build.
 - Tests, type check, lint (wrap-up runs these): `python3 -m unittest discover -s tools -p 'test_*.py'`,
   `python3 tools/pack.py`.
 - Push reminder, once per clone: `node .claude/hooks/push-reminder.mjs --install`
+- On Windows, use `py` where these say `python3` (`python3` isn't on the PATH there).
 
 ### Environments
 
@@ -219,7 +222,7 @@ Shortcut: if `python3 tools/pack.py` passes, the release will build.
 ### Branches, review and release
 
 - PRs go to (target branch): `main`. Adding, changing or removing a page goes straight to `main`
-  (owner decision, 2026-11-08); tools and workflows go through a PR.
+  (owner decision, 2026-11-07); tools and workflows go through a PR.
 - Branch names (default `feature/<short-name>`): the default.
 - Bring a branch up to date by (merge or rebase): merge.
 - Reviewer: with no second reviewer, the person reviews the whole diff themselves before it merges.

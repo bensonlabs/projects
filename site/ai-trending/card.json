@@ -2,7 +2,7 @@
   "title": "AI Trending",
   "emoji": "🤖",
   "order": 30,
-  "description": "Daily analysis of trending AI/ML repositories on GitHub with ranked results, category filtering, and repository scoring.",
+  "description": "An archive of daily snapshots (2026-06-28 to 2026-07-13) of trending AI/ML repositories on GitHub, with ranked results, category filtering and repository scoring. Opens on the last day.",
   "cta": "View →",
   "header": "no"
 }
