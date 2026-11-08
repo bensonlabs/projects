@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # Keeps the actions in this repo's workflows current. Security updates come from the
+  # repository's Dependabot security updates setting, not from this file.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
