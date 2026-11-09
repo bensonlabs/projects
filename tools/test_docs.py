@@ -4,7 +4,7 @@ A cited path is a word in `backticks` that starts with tools/, site/, templates/
 or .github/; a command counts too (`python3 tools/pack.py` cites tools/pack.py). Only the part
 before a placeholder or a wildcard is checked, up to its last slash: `site/workouts/<slug>/`
 checks site/workouts/. Fenced code blocks are skipped. Docs are prose, so finding the paths with
-a regex is fine here (core rule 8 is about code structure).
+a regex is fine here (reading code structure is what needs a parser).
 """
 import re
 import unittest
